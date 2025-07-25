@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import Section, Post
 from django.shortcuts import redirect
 from .models import Post
+from django.shortcuts import get_object_or_404
 
 
 def signup(request):
@@ -50,13 +51,22 @@ def section_redirect_view(request):
         section_name = request.POST['section_name']
         return redirect('section_detail', section_name=section_name)
 
-
-def section_detail_view(request, section_name):
+def image_detail(request, section_name):
     posts = Post.objects.filter(section__name__iexact=section_name)
     return render(request, 'login/section_detail.html', {
         'section_name': section_name,
         'posts': posts
     })
+
+def section_detail_view(request, section_name):
+    posts = Post.objects.filter(section__name__iexact=section_name)
+    previous_url = request.META.get('HTTP_REFERER', '/')
+    return render(request, 'login/section_detail.html', {
+        'section_name': section_name,
+        'posts': posts,
+        'previous_url': previous_url
+    })
+
 
 def admin_page(request):
     if request.method == 'POST':
@@ -86,8 +96,10 @@ def admin_page(request):
 def add_section(request):
     if request.method == 'POST':
         section_name = request.POST.get('section_name')
+        section_image = request.FILES.get('section_image')  # ✅ handle image upload
+
         if section_name:
-            Section.objects.create(name=section_name)
+            Section.objects.create(name=section_name,image=section_image)
             messages.success(request, "Section added successfully!")
         else:
             messages.error(request, "Section name cannot be empty.")

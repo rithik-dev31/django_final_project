@@ -64,6 +64,12 @@
             height: auto;
             border-radius: 10px;
         }
+        button:hover {
+            background-color: #6c757d;
+            color: white;
+            transition: 0.3s ease;
+        }
+
     </style>
 </head>
 <body>
@@ -73,6 +79,11 @@
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Logout</button>
 </form>
+<div class="position-absolute top-0 start-0 m-3">
+    <a href="{{ previous_url }}" class="btn btn-outline-light rounded-pill shadow-sm">
+        ← Back to Previous Page
+    </a>
+</div>
 
 <!-- Brand -->
 <div class="brand-title">EDUTUBE</div>
