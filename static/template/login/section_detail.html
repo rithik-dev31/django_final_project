@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDUTUBE - {{ section_name|title }} Content</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Font for Branding -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+            min-height: 100vh;
+            padding-top: 60px;
+            color: #333;
+            font-family: 'Segoe UI', sans-serif;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 40px;
+            animation: glow 2s infinite ease-in-out;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #00f2fe; }
+            50% { text-shadow: 0 0 20px #fff, 0 0 40px #00f2fe; }
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .card {
+            animation: slideIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        iframe {
+            border-radius: 8px;
+            width: 100%;
+            height: 315px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Logout Button -->
+<form action="{% url 'logout' %}" method="post" class="logout-btn">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Logout</button>
+</form>
+
+<!-- Brand -->
+<div class="brand-title">EDUTUBE</div>
+
+<div class="container">
+    <h2 class="text-white text-center mb-5">Posts for <span class="text-warning">{{ section_name|title }}</span></h2>
+
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-md-6 mb-4">
+                <div class="card p-3 shadow-sm bg-white">
+                    <h4 class="text-primary">{{ post.content_name }}</h4>
+                    <p>{{ post.description }}</p>
+
+                    {% if post.url %}
+                        <div class="mb-3">
+                            <iframe src="{{ post.url }}"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                        </div>
+                    {% endif %}
+
+                    {% if post.image %}
+                        <div>
+                            <img src="{{ post.image.url }}" alt="Thumbnail">
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center text-light">
+                <p>No content found in this section.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>
