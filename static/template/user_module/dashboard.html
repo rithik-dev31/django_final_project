@@ -101,24 +101,30 @@
 <!-- Navigation Bar -->
 <!-- Modern Frosted Glass Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white bg-opacity-75 backdrop-blur shadow-sm fixed-top border-bottom" style="backdrop-filter: blur(12px);">
-  <div class="container">
-    <a class="navbar-brand fw-bold text-primary fs-4" href="#" style="letter-spacing: 1px;">SkillBridge</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary fs-4" href="#" style="letter-spacing: 1px;">SkillBridge</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+        <span class="navbar-toggler-icon"></span>
+        </button>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
       <div class="navbar-nav align-items-center">
         <a class="nav-link px-3 text-dark fw-medium" href="#about">About Us</a>
         <a class="nav-link px-3 text-dark fw-medium" href="#courses">Explore Courses</a>
         <a class="nav-link px-3 text-dark fw-medium" href="#creator">Created By</a>
+        <a href="{% url 'profile' %}" style="text-decoration: none; color: white; font-weight: bold;" class="nav-link px-3 text-dark fw-medium">
+            User Profile
+        </a>
+        
+    </div>
+
         <form action="{% url 'logout' %}" method="post" class="d-inline ms-3">
           {% csrf_token %}
           <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill">Logout</button>
         </form>
-      </div>
+    
+        </div>
     </div>
-  </div>
 </nav>
 
 

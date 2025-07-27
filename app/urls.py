@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import *
+# from django.contrib.auth.decorators import login_required
+# from login.views import signin_view  # adjust based on your file
 
 
 urlpatterns = [
@@ -12,6 +14,16 @@ urlpatterns = [
     path('add-section/', add_section, name='add_section'),
    
     path('logout/', logout_view, name='logout'),
+    path('profile/',profile_view, name='profile'),
+
+    # editign the post
+    path('delete-post/<int:post_id>/', delete_post, name='delete_post'),
+    path('edit-post/<int:post_id>/', edit_post, name='edit_post'),
+
+    path('edit-section/<int:section_id>/', edit_section, name='edit_section'),
+    path('delete-section/<int:section_id>/', delete_section, name='delete_section'),
+
     # your other paths...
+
 ]
 

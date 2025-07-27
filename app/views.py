@@ -5,21 +5,30 @@ from .models import Section, Post
 from django.shortcuts import redirect
 from .models import Post
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .forms import UserProfileForm
 
 
 def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
+        email = request.POST['email']  # Get email from form
         password = request.POST['password']
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
             return redirect('signup')
 
-        User.objects.create(username=username, password=password)
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already registered')
+            return redirect('signup')
+
+        User.objects.create(username=username, email=email, password=password)
         messages.success(request, 'Account created! Please log in.')
         return redirect('signin')
+
     return render(request, 'login/signup.html')
+
 
 def signin(request):
     if request.method == 'POST':
@@ -43,7 +52,7 @@ def dashboard(request):
     if user_id:
         user = User.objects.get(id=user_id)
         sections = Section.objects.all()
-        return render(request, 'login/dashboard.html', {'user': user, 'sections': sections})
+        return render(request, 'user_module/dashboard.html', {'user': user, 'sections': sections})
     return redirect('signin')
 
 def section_redirect_view(request):
@@ -53,7 +62,7 @@ def section_redirect_view(request):
 
 def image_detail(request, section_name):
     posts = Post.objects.filter(section__name__iexact=section_name)
-    return render(request, 'login/section_detail.html', {
+    return render(request, 'user_module/section_detail.html', {
         'section_name': section_name,
         'posts': posts
     })
@@ -61,7 +70,7 @@ def image_detail(request, section_name):
 def section_detail_view(request, section_name):
     posts = Post.objects.filter(section__name__iexact=section_name)
     previous_url = request.META.get('HTTP_REFERER', '/')
-    return render(request, 'login/section_detail.html', {
+    return render(request, 'user_module/section_detail.html', {
         'section_name': section_name,
         'posts': posts,
         'previous_url': previous_url
@@ -88,8 +97,10 @@ def admin_page(request):
         messages.success(request, 'Post added successfully!')
         return redirect('admin_page')  # Redirect to the same admin dashboard
 
+    posts = Post.objects.select_related('section').all()
     sections = Section.objects.all()
-    return render(request, 'login/admin.html', {'sections': sections})
+    return render(request, 'login/admin.html', {'sections': sections, 'posts': posts})
+
 
 
 
@@ -108,3 +119,88 @@ def add_section(request):
 def logout_view(request):
     request.session.flush()  # Clear all session data
     return redirect('signin')  # Redirect to login/signin page
+
+
+
+# profile page view
+def profile_view(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('signin')  # redirect if user not logged in
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return redirect('signin')
+
+    edit_mode = request.GET.get('edit') == 'true'
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        profile_image = request.FILES.get('profile_image')
+        bio = request.POST.get('bio')
+        name= request.POST.get('name')
+
+        user.name = name
+        user.username = username
+        user.email = email
+        user.bio = bio
+        if profile_image:
+            user.profile_image = profile_image
+        user.save()
+
+        return redirect('profile')
+
+    return render(request, 'user_module/profile.html', {
+        'user': user,
+        'edit_mode': edit_mode,
+    })
+
+
+
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    messages.success(request, 'Post deleted successfully.')
+    return redirect('admin_page')
+
+
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        post.content_name = request.POST['content_name']
+        post.description = request.POST['description']
+        post.url = request.POST['url']
+        post.save()
+        messages.success(request, 'Post updated successfully.')
+        return redirect('admin_page')
+    return render(request, 'login/edit_post.html', {'post': post})
+
+
+
+# edit the section
+def edit_section(request, section_id):
+    section = get_object_or_404(Section, id=section_id)
+
+    if request.method == 'POST':
+        section_name = request.POST.get('section_name')
+        section_image = request.FILES.get('section_image')
+
+        if section_name:
+            section.name = section_name
+        if section_image:
+            section.image = section_image
+
+        section.save()
+        messages.success(request, "Section updated successfully!")
+        return redirect('admin_page')
+
+    return render(request, 'login/edit_section.html', {'section': section})
+
+
+def delete_section(request, section_id):
+    section = get_object_or_404(Section, id=section_id)
+    section.delete()
+    messages.success(request, "Section and its related posts deleted successfully.")
+    return redirect('admin_page')  # Or 'admin_page' based on your actual name
