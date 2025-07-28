@@ -188,6 +188,32 @@
     </div>
 </section>
 
+
+
+<!-- chatbox -->
+{% for community in communities %}
+  <div class="card my-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ community.section.name }}</h5>
+
+      {% if user in community.members.all %}
+        <a href="{% url 'leave_community' community.section.id %}" class="btn btn-danger">Leave</a>
+       <a href="{% url 'community_chat' community.section.id %}" class="btn btn-primary">Enter Chat</a>
+      {% else %}
+        <a href="{% url 'join_community' community.section.id %}" class="btn btn-success">Join</a>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+
+
+
+  <div class="col-md-9">
+    <!-- main dashboard content here -->
+  </div>
+</div>
+
+
 <!-- Created By Section -->
 <footer id="creator" class="footer">
     <p>Website created by <strong>RITHIK E</strong></p>

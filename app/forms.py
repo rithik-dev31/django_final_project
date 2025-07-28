@@ -1,7 +1,7 @@
 from django import forms
-from .models import User
+from .models import UserProfile  # ✅ Rename import
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['username', 'email', 'profile_image','bio','name']  # NOT password
+        model = UserProfile  # ✅ Updated model reference
+        fields = ['username', 'email', 'profile_image', 'bio', 'name']

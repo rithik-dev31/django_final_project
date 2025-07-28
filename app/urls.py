@@ -23,7 +23,11 @@ urlpatterns = [
     path('edit-section/<int:section_id>/', edit_section, name='edit_section'),
     path('delete-section/<int:section_id>/', delete_section, name='delete_section'),
 
-    # your other paths...
+    path('dashboard/', dashboard, name='dashboard'),
+    path('community/join/<int:section_id>/', join_community, name='join_community'),
+    path('community/leave/<int:section_id>/', leave_community, name='leave_community'),
+    path('community/chat/<int:section_id>/',community_chat, name='community_chat'),
+    # your other paths...   
 
 ]
 
