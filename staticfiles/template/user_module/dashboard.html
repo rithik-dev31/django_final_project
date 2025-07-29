@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | LearnHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+
+        *{
+            scroll-margin-top:70px;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #e3f2fd, #fff3e0);
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+            color: #fff;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            animation: fadeSlideIn 1s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .course-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .course-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .course-body {
+            padding: 15px;
+            background: #ffffff;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding: 30px 0;
+            background: #212121;
+            color: #eee;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #90caf9;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            color: white;
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(to left, #4facfe 0%, #00f2fe 100%);
+        }
+       
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<!-- Modern Frosted Glass Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white bg-opacity-75 backdrop-blur shadow-sm fixed-top border-bottom" style="backdrop-filter: blur(12px);">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary fs-4" href="#" style="letter-spacing: 1px;">SkillBridge</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+      <div class="navbar-nav align-items-center">
+        <a class="nav-link px-3 text-dark fw-medium" href="#about">About Us</a>
+        <a class="nav-link px-3 text-dark fw-medium" href="#courses">Explore Courses</a>
+        <a class="nav-link px-3 text-dark fw-medium" href="#creator">Created By</a>
+        <a href="{% url 'profile' %}" style="text-decoration: none; color: white; font-weight: bold;" class="nav-link px-3 text-dark fw-medium">
+            User Profile
+        </a>
+        
+    </div>
+
+        <form action="{% url 'logout' %}" method="post" class="d-inline ms-3">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill">Logout</button>
+        </form>
+    
+        </div>
+    </div>
+</nav>
+
+
+<!-- Logout Button -->
+<!-- <form action="{% url 'logout' %}" method="post" class="logout-btn">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+</form> -->
+
+<!-- Hero / About Section -->
+<section id="about" class="hero-section container">
+    <h1 class="display-5 fw-bold">Welcome, {{ user.username }}!</h1>
+    <p class="lead mt-3">LearnHub is your go-to platform to explore high-quality, curated YouTube courses for modern skills like Web Development, Python, Data Science, UI/UX and more.</p>
+    <p>Choose your section and dive into handpicked content with ease!</p>
+</section>
+
+<!-- Course Dropdown -->
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="bg-white p-4 rounded shadow-sm">
+                <form method="POST" action="{% url 'section_redirect' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="section" class="form-label fw-semibold">Choose a course:</label>
+                        <select name="section_name" class="form-select" required>
+                            <option value="" disabled selected>-- Choose a course --</option>
+                            {% for section in sections %}
+                                <option value="{{ section.name }}">{{ section.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-gradient">Go to Course</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Cards -->
+<section id="courses" class="container">
+    <div class="row">
+        {% for section in sections %}
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+            <a href="{% url 'section_detail' section.name %}" style="text-decoration: none; color: inherit;">
+                <div class="card course-card">
+                    {% if section.image %}
+                        <img src="{{ section.image.url }}" alt="{{ section.name }}" class="course-img">
+                    {% else %}
+                        <img src="{% static 'default_course.jpg' %}" alt="No Image" class="course-img">
+                    {% endif %}
+                    <div class="course-body">
+                        <div class="course-name fw-bold fs-5 text-primary">{{ section.name }}</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+
+<!-- chatbox -->
+{% for community in communities %}
+  <div class="card my-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ community.section.name }}</h5>
+
+      {% if user in community.members.all %}
+        <a href="{% url 'leave_community' community.section.id %}" class="btn btn-danger">Leave</a>
+       <a href="{% url 'community_chat' community.section.id %}" class="btn btn-primary">Enter Chat</a>
+      {% else %}
+        <a href="{% url 'join_community' community.section.id %}" class="btn btn-success">Join</a>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+
+
+
+  <div class="col-md-9">
+    <!-- main dashboard content here -->
+  </div>
+</div>
+
+
+<!-- Created By Section -->
+<footer id="creator" class="footer">
+    <p>Website created by <strong>RITHIK E</strong></p>
+    <p>Connect with me on <a href="https://linkedin.com" target="_blank">LinkedIn</a> | <a href="mailto:rithik@example.com">Email</a></p>
+    <p>&copy; 2025 LearnHub. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
