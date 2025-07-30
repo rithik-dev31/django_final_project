@@ -29,6 +29,19 @@ urlpatterns = [
     path('community/join/<int:section_id>/', join_community, name='join_community'),
     path('community/leave/<int:section_id>/', leave_community, name='leave_community'),
     path('community/chat/<int:section_id>/',community_chat, name='community_chat'),
+    path('filter-jobs/', filter_jobs, name='filter_jobs'),
+    path('repo-filter/',repo_filter, name='repo_filter'),
+
+
+    # delete and edit the repo and job openings
+    path('edit-job/<int:job_id>/', edit_jobopening, name='edit_job'),
+    path('delete-job/<int:job_id>/',delete_jobopening, name='delete_job'),
+
+    path('edit-repo/<int:repo_id>/', edit_repo, name='edit_repo'),
+    path('delete-repo/<int:repo_id>/', delete_repo, name='delete_repo'),
+
+
+
     # your other paths...   
 
 ]

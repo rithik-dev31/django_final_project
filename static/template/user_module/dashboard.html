@@ -2,225 +2,377 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard | LearnHub</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
+  <meta charset="UTF-8">
+  <title>Dashboard | LearnHub</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #fff3e0);
+      min-height: 100vh;
+      padding-top: 70px;
+      margin-left: 220px;
+    }
 
-        *{
-            scroll-margin-top:70px;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to right, #e3f2fd, #fff3e0);
-            min-height: 100vh;
-            padding-top: 70px;
-        }
+    .navbar {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
 
-        .navbar {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+    .hero-section {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+      color: #fff;
+      border-radius: 20px;
+      margin-bottom: 50px;
+      animation: fadeSlideIn 1s ease;
+    }
 
-        .logout-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-        }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .hero-section {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
-            color: #fff;
-            border-radius: 20px;
-            margin-bottom: 50px;
-            animation: fadeSlideIn 1s ease;
-        }
+    .course-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
 
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .course-card:hover {
+      transform: translateY(-10px);
+    }
 
-        .course-card {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-        }
+    .course-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
 
-        .course-card:hover {
-            transform: translateY(-10px);
-        }
+    .course-body {
+      padding: 15px;
+      background: #ffffff;
+      text-align: center;
+    }
 
-        .course-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
+    .footer {
+      margin-top: 60px;
+      padding: 30px 0;
+      background: #212121;
+      color: #eee;
+      text-align: center;
+    }
 
-        .course-body {
-            padding: 15px;
-            background: #ffffff;
-            text-align: center;
-        }
+    .btn-gradient {
+      background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+      border: none;
+      color: white;
+    }
 
-        .footer {
-            margin-top: 60px;
-            padding: 30px 0;
-            background: #212121;
-            color: #eee;
-            text-align: center;
-        }
+    .btn-gradient:hover {
+      background: linear-gradient(to left, #4facfe 0%, #00f2fe 100%);
+    }
 
-        .footer a {
-            color: #90caf9;
-            text-decoration: none;
-        }
+    aside {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      z-index: 998;
+      padding-top: 40px;
+    }
 
-        .footer a:hover {
-            text-decoration: underline;
-        }
+    aside ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-        .btn-gradient {
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-            border: none;
-            color: white;
-        }
+    aside ul li {
+      padding: 12px 20px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      font-weight: 500;
+    }
 
-        .btn-gradient:hover {
-            background: linear-gradient(to left, #4facfe 0%, #00f2fe 100%);
-        }
-       
-    </style>
+    aside ul li:hover {
+      background: #f5f5f5;
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Navigation Bar -->
-<!-- Modern Frosted Glass Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white bg-opacity-75 backdrop-blur shadow-sm fixed-top border-bottom" style="backdrop-filter: blur(12px);">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-primary fs-4" href="#" style="letter-spacing: 1px;">SkillBridge</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-        <span class="navbar-toggler-icon"></span>
-        </button>
+<!-- Sidebar -->
+<aside>
+  <ul>
+    <li onclick="showSection('explore-courses')">Explore Courses</li>
+    <li onclick="showSection('jobsSection')">Job Openings</li>
+    <li onclick="showSection('repoSection')">Repositories</li>
+    <li onclick="showSection('communitySection')">Community</li>
+  </ul>
+</aside>
 
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white bg-opacity-75 backdrop-blur shadow-sm fixed-top border-bottom" style="backdrop-filter: blur(12px);">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary fs-4" href="#">SkillBridge</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
       <div class="navbar-nav align-items-center">
         <a class="nav-link px-3 text-dark fw-medium" href="#about">About Us</a>
         <a class="nav-link px-3 text-dark fw-medium" href="#courses">Explore Courses</a>
         <a class="nav-link px-3 text-dark fw-medium" href="#creator">Created By</a>
-        <a href="{% url 'profile' %}" style="text-decoration: none; color: white; font-weight: bold;" class="nav-link px-3 text-dark fw-medium">
-            User Profile
-        </a>
-        
+        <a href="{% url 'profile' %}" class="nav-link px-3 text-dark fw-medium">User Profile</a>
+      </div>
+      <form action="{% url 'logout' %}" method="post" class="d-inline ms-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill">Logout</button>
+      </form>
     </div>
-
-        <form action="{% url 'logout' %}" method="post" class="d-inline ms-3">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill">Logout</button>
-        </form>
-    
-        </div>
-    </div>
+  </div>
 </nav>
 
-
-<!-- Logout Button -->
-<!-- <form action="{% url 'logout' %}" method="post" class="logout-btn">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger btn-sm">Logout</button>
-</form> -->
-
-<!-- Hero / About Section -->
-<section id="about" class="hero-section container">
-    <h1 class="display-5 fw-bold">Welcome, {{ user.username }}!</h1>
-    <p class="lead mt-3">LearnHub is your go-to platform to explore high-quality, curated YouTube courses for modern skills like Web Development, Python, Data Science, UI/UX and more.</p>
-    <p>Choose your section and dive into handpicked content with ease!</p>
+<!-- Hero Section -->
+<section id="about" class="hero-section container-sm">
+  <h1 class="display-5 fw-bold">Welcome, {{ user.username }}!</h1>
+  <p class="lead mt-3">LearnHub is your go-to platform to explore curated YouTube courses on Web Dev, Python, Data Science, UI/UX and more.</p>
+  <p>Choose your section and dive into handpicked content!</p>
 </section>
 
-<!-- Course Dropdown -->
-<div class="container mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="bg-white p-4 rounded shadow-sm">
-                <form method="POST" action="{% url 'section_redirect' %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="section" class="form-label fw-semibold">Choose a course:</label>
-                        <select name="section_name" class="form-select" required>
-                            <option value="" disabled selected>-- Choose a course --</option>
-                            {% for section in sections %}
-                                <option value="{{ section.name }}">{{ section.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-gradient">Go to Course</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<!-- Explore Courses Section -->
+<div id="explore-courses" class="content-section container-sm">
+  <!-- Course Selector -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+      <div class="bg-white p-4 rounded shadow-sm">
+        <form method="POST" action="{% url 'section_redirect' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="section" class="form-label fw-semibold">Choose a course:</label>
+            <select name="section_name" class="form-select" required>
+              <option value="" disabled selected>-- Choose a course --</option>
+              {% for section in sections %}
+                <option value="{{ section.name }}">{{ section.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-gradient">Go to Course</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+
+  <!-- Course Cards -->
+  <div class="row">
+    {% for section in sections %}
+    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+      <a href="{% url 'section_detail' section.name %}" style="text-decoration: none; color: inherit;">
+        <div class="card course-card">
+          {% if section.image %}
+            <img src="{{ section.image.url }}" alt="{{ section.name }}" class="course-img">
+          {% else %}
+            <img src="{% static 'default_course.jpg' %}" alt="No Image" class="course-img">
+          {% endif %}
+          <div class="course-body">
+            <div class="course-name fw-bold fs-5 text-primary">{{ section.name }}</div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 
-<!-- Section Cards -->
-<section id="courses" class="container">
-    <div class="row">
-        {% for section in sections %}
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-            <a href="{% url 'section_detail' section.name %}" style="text-decoration: none; color: inherit;">
-                <div class="card course-card">
-                    {% if section.image %}
-                        <img src="{{ section.image.url }}" alt="{{ section.name }}" class="course-img">
-                    {% else %}
-                        <img src="{% static 'default_course.jpg' %}" alt="No Image" class="course-img">
-                    {% endif %}
-                    <div class="course-body">
-                        <div class="course-name fw-bold fs-5 text-primary">{{ section.name }}</div>
-                    </div>
-                </div>
-            </a>
+<!-- Jobs Section -->
+<section id="jobsSection" class="container-sm content-section">
+  <h3 class="text-center mb-4">Latest Job Openings</h3>
+
+  <!-- Section Filter Dropdown -->
+  <div class="mb-4" style="width:300px;">
+    <select id="sectionFilter" class="form-select">
+      <option value="" selected disabled>-- Filter by Course --</option>
+      {% for section in sections %}
+        <option value="{{ section.id }}">{{ section.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Job Listings -->
+  <div id="job-list">
+    {% for job in jobs %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ job.content_name }}</h5>
+          <p class="card-text">{{ job.description }}</p>
+          <a href="{{ job.url }}" target="_blank" class="btn btn-gradient">Apply Now</a>
         </div>
-        {% endfor %}
-    </div>
+      </div>
+    {% empty %}
+      <p class="text-muted text-center">No job postings yet.</p>
+    {% endfor %}
+  </div>
 </section>
 
-
-
-<!-- chatbox -->
-{% for community in communities %}
+<!-- Community Section -->
+<section id="communitySection" class="container-sm content-section">
+  {% for community in communities %}
   <div class="card my-3">
     <div class="card-body">
       <h5 class="card-title">{{ community.section.name }}</h5>
-
       {% if user in community.members.all %}
         <a href="{% url 'leave_community' community.section.id %}" class="btn btn-danger">Leave</a>
-       <a href="{% url 'community_chat' community.section.id %}" class="btn btn-primary">Enter Chat</a>
+        <a href="{% url 'community_chat' community.section.id %}" class="btn btn-primary">Enter Chat</a>
       {% else %}
         <a href="{% url 'join_community' community.section.id %}" class="btn btn-success">Join</a>
       {% endif %}
     </div>
   </div>
-{% endfor %}
+  {% endfor %}
+</section>
 
 
+<!-- repo links -->
+<!-- Repository Section -->
+<section id="repoSection" class="container-sm content-section">
+  <h3 class="text-center mb-4">Useful GitHub Repositories</h3>
 
-  <div class="col-md-9">
-    <!-- main dashboard content here -->
+  <!-- Section Filter Dropdown -->
+  <div class="mb-4" style="width:300px;">
+    <select id="repoSectionFilter" class="form-select">
+      <option value="" selected disabled>-- Filter by Course --</option>
+      {% for section in sections %}
+        <option value="{{ section.id }}">{{ section.name }}</option>
+      {% endfor %}
+    </select>
   </div>
-</div>
+
+  <!-- Repo Listings -->
+  <div id="repo-list">
+    {% for repo in repos %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ repo.content_name }}</h5>
+          <p class="card-text">{{ repo.description }}</p>
+          <a href="{{ repo.url }}" target="_blank" class="btn btn-gradient">Visit Repository</a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted text-center">No repository links yet.</p>
+    {% endfor %}
+  </div>
+</section>
 
 
-<!-- Created By Section -->
+
+<!-- Footer -->
 <footer id="creator" class="footer">
-    <p>Website created by <strong>RITHIK E</strong></p>
-    <p>Connect with me on <a href="https://linkedin.com" target="_blank">LinkedIn</a> | <a href="mailto:rithik@example.com">Email</a></p>
-    <p>&copy; 2025 LearnHub. All rights reserved.</p>
+  <p>Website created by <strong>RITHIK E</strong></p>
+  <p>Connect on <a href="https://linkedin.com" target="_blank">LinkedIn</a> | <a href="mailto:rithik@example.com">Email</a></p>
+  <p>&copy; 2025 LearnHub. All rights reserved.</p>
 </footer>
 
+<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function showSection(sectionId) {
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(sec => sec.style.display = 'none');
+    const target = document.getElementById(sectionId);
+    if (target) target.style.display = 'block';
+  }
+
+  // Job filter by section (AJAX)
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropdown = document.getElementById("sectionFilter");
+    if (dropdown) {
+      dropdown.addEventListener("change", function () {
+        const sectionId = this.value;
+        fetch(`/filter-jobs/?section_id=${sectionId}`)
+          .then(response => response.json())
+          .then(data => {
+            const jobList = document.getElementById("job-list");
+            jobList.innerHTML = '';
+
+            if (data.jobs.length === 0) {
+              jobList.innerHTML = '<p class="text-muted text-center">No job postings for this section.</p>';
+              return;
+            }
+
+            data.jobs.forEach(job => {
+              const card = `
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">${job.content_name}</h5>
+                    <p class="card-text">${job.description}</p>
+                    <a href="${job.url}" target="_blank" class="btn btn-gradient">Apply Now</a>
+                  </div>
+                </div>
+              `;
+              jobList.insertAdjacentHTML('beforeend', card);
+            });
+          });
+      });
+    }
+  });
+
+
+// repo section js
+
+// Repo filter by section (AJAX)
+    document.addEventListener("DOMContentLoaded", function () {
+    const repoDropdown = document.getElementById("repoSectionFilter");
+    if (repoDropdown) {
+        repoDropdown.addEventListener("change", function () {
+        const sectionId = this.value;
+        fetch(`/repo-filter/?section_id=${sectionId}`)
+            .then(response => response.json())
+            .then(data => {
+            const repoList = document.getElementById("repo-list");
+            repoList.innerHTML = '';
+
+            if (data.repos.length === 0) {
+                repoList.innerHTML = '<p class="text-muted text-center">No repositories for this section.</p>';
+                return;
+            }
+
+            data.repos.forEach(repo => {
+                const card = `
+                <div class="card mb-3">
+                    <div class="card-body">
+                    <h5 class="card-title">${repo.repo_name}</h5>
+                    <p class="card-text">${repo.description}</p>
+                    <a href="${repo.repo_url}" target="_blank" class="btn btn-gradient">Visit Repository</a>
+                    </div>
+                </div>
+                `;
+                repoList.insertAdjacentHTML('beforeend', card);
+            });
+            });
+        });
+    }
+    });
+
+  
+</script>
+
 </body>
 </html>

@@ -44,3 +44,24 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f"{self.user.username}: {self.message[:20]}"
+    
+# job opening section
+
+class JobOpening(models.Model):  # ← Renamed from jobopenings
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    content_name = models.CharField(max_length=255)
+    description = models.TextField()
+    url = models.URLField(max_length=500)
+
+    def __str__(self):
+        return self.content_name
+    
+
+class Repolink(models.Model):
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    repo_name = models.CharField(max_length=255)
+    description = models.TextField()
+    repo_url = models.URLField(max_length=500)
+
+    def __str__(self):
+        return self.repo_name
