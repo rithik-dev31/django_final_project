@@ -65,3 +65,24 @@ class Repolink(models.Model):
 
     def __str__(self):
         return self.repo_name
+    
+
+
+    # ... your existing imports and models ...
+
+class Feedback(models.Model):
+    FEEDBACK_TYPES = [
+        ("Bug Report", "Bug Report"),
+        ("Feature Request", "Feature Request"),
+        ("General Feedback", "General Feedback"),
+        ("Help Needed", "Help Needed"),
+    ]
+
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    feedback_type = models.CharField(max_length=50, choices=FEEDBACK_TYPES)
+    message = models.TextField()
+    rating = models.IntegerField(null=True, blank=True)  # optional: 1 to 5 stars
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.feedback_type} from {self.user.username if self.user else 'Anonymous'}"

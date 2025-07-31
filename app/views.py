@@ -11,7 +11,8 @@ from .models import (
     Community,
     ChatMessage,
     JobOpening,
-    Repolink
+    Repolink,
+    Feedback
 )
 
 from .forms import UserProfileForm
@@ -162,11 +163,13 @@ def admin_page(request):
     job_openings = JobOpening.objects.select_related('section').all()
     sections = Section.objects.all()
     repositories = Repolink.objects.select_related('section').all()
+    feedback= Feedback.objects.all()
     return render(request, 'login/admin.html', {
         'sections': sections,
         'posts': posts,
         'job_openings': job_openings,
         'repositories': repositories,
+        'feedbacks': feedback,
     })
 
 
@@ -395,4 +398,28 @@ def edit_repo(request, repo_id):
     return render(request, 'login/edit_repo.html', {'repo': repo})
 
 
+# submit feedback
+def submit_feedback(request):
+    if request.method == "POST":
+        feedback_type = request.POST.get('feedback_type')
+        message = request.POST.get('message')
+        rating = request.POST.get('rating') or None
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('signin')
+        user = UserProfile.objects.get(id=user_id)
+        Feedback.objects.create(
+            user=user,
+            feedback_type=feedback_type,
+            message=message,
+            rating=rating
+        )
+        messages.success(request, "Thank you for your feedback!, your feedback is valuable to us, we will review it and take necessary actions.")
+        return redirect('dashboard')  # or your current page
 
+
+def delete_feedback(request, feedback_id):
+    feedback = get_object_or_404(Feedback, id=feedback_id)
+    feedback.delete()
+    messages.success(request, "Feedback deleted successfully.")
+    return redirect('admin_page')  # or your admin URL name

@@ -44,5 +44,9 @@ urlpatterns = [
 
     # your other paths...   
 
+    # feedback
+    path('submit-feedback/', submit_feedback, name='submit_feedback'),
+    path('delete-feedback/<int:feedback_id>/', delete_feedback, name='delete_feedback'),
+
 ]
 

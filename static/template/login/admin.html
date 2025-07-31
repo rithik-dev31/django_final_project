@@ -60,281 +60,457 @@
         textarea.form-control {
             resize: vertical;
         }
+        aside {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 220px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      z-index: 998;
+      padding-top: 40px;
+    }
+
+    main{
+        margin-left:223px;
+    }
+    aside ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    aside ul li {
+      padding: 12px 20px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    aside ul li:hover {
+      background: #f5f5f5;
+    }
+
+    .addjob{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        row-gap: 10px;
+        height: max-content;
+    }
+
+     .navbar {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+        }
+
+     .navbar .brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+        }
+
+        .welcome-section {
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin: 20px;
+        }
+
+        .welcome-section h2 {
+            font-weight: bold;
+        }
+
+        .welcome-section p {
+            margin-top: 10px;
+            font-size: 1.05rem;
+        }
+          .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+            color: #fff;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            animation: fadeSlideIn 1s ease;
+
+            li{
+                list-style-type: none;
+            }
+        }
     </style>
 </head>
 <body>
-
+    <nav class="navbar">
+        <div class="brand-title">EDUTUBE Admin</div>
+        <form action="{% url 'logout' %}" method="post" class="d-inline logout-btn">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+        </form>
+    </nav>
+    
+<aside>
+    <ul>
+        <li onclick="showSection('add_new')">Post course</li>
+        <li onclick="showSection('allpost')">Post management</li>
+        <li onclick="showSection('addjob')">Repo-post</li>
+        <li onclick="showSection('allrepo')">Repo management</li>
+        <li onclick="showSection('feedback')">User feedbacks</li>
+        <!-- <li onclick="showSection('feedbacksection')">Feedback</li> -->
+    </ul>
+</aside>
     <!-- Logout Button -->
-    <form action="{% url 'logout' %}" method="post" class="logout-btn">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Logout</button>
-    </form>
+<main>
+   <!-- welcome section -->
 
-    <!-- EDUTUBE Brand -->
-    <div class="brand-title">EDUTUBE Admin</div>
+    <section id="welcome" class="hero-section">
+        <h2>Welcome, Admin!</h2>
+        <p>
+            This is your admin dashboard where you can manage all educational content, repository links, and job openings for the EDUTUBE platform.
+        </p>
+        <p>
+            Use the navigation menu on the left to:
+        </p>
+        <ul>
+            <li>📥 <strong>Post new courses</strong> and tutorials under specific sections</li>
+            <li>🛠️ <strong>Edit or delete</strong> existing posts and sections</li>
+            <li>💼 <strong>Add job opportunities</strong> for users under different categories</li>
+            <li>🔗 <strong>Share GitHub repositories</strong> for open source projects or study materials</li>
+        </ul>
+        <p>
+            Your role is crucial in keeping the platform updated, organized, and educational. Thank you!
+        </p>
+    </section>
 
-    <div class="container">
-        <div class="row g-4 justify-content-center">
-            <!-- Add Content Card -->
-            <div class="col-md-6">
-                <div class="card p-4 bg-white">
-                    <h4 class="mb-3 text-primary text-center">Add New Content</h4>
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="post">
 
-                        <div class="mb-3">
-                            <label class="form-label">Select Section</label>
-                            <select name="section" class="form-select" required>
-                                {% for sec in sections %}
-                                    <option value="{{ sec.id }}">{{ sec.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" name="content_name" class="form-control" placeholder="Content Name" required>
-                        </div>
-                        <div class="mb-3">
-                            <textarea name="description" class="form-control" placeholder="Description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <input type="url" name="url" class="form-control" placeholder="Video URL" required>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success">Add Post</button>
-                        </div>
-                    </form>
+
+   <!-- welcome section end -->
+    <section id="add_new" class="add_new container-sm">
+
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <!-- Add Content Card -->
+                <div class="col-md-6">
+                    <div class="card p-4 bg-white">
+                        <h4 class="mb-3 text-primary text-center">Add New Content</h4>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="post">
+
+                            <div class="mb-3">
+                                <label class="form-label">Select Section</label>
+                                <select name="section" class="form-select" required>
+                                    {% for sec in sections %}
+                                        <option value="{{ sec.id }}">{{ sec.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" name="content_name" class="form-control" placeholder="Content Name" required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="description" class="form-control" placeholder="Description" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <input type="url" name="url" class="form-control" placeholder="Video URL" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success">Add Post</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Add Section Card -->
-            <div class="col-md-5">
-                <div class="card p-4 bg-white">
-                    <h4 class="mb-3 text-success text-center">Add New Section</h4>
-                    <form method="POST" action="{% url 'add_section' %}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label">Section Name</label>
-                            <input type="text" name="section_name" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Section Image</label>
-                            <input type="file" name="section_image" class="form-control">
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Add Section</button>
-                        </div>
-                    </form>
+                <!-- Add Section Card -->
+                <div class="col-md-5">
+                    <div class="card p-4 bg-white">
+                        <h4 class="mb-3 text-success text-center">Add New Section</h4>
+                        <form method="POST" action="{% url 'add_section' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Section Name</label>
+                                <input type="text" name="section_name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Section Image</label>
+                                <input type="file" name="section_image" class="form-control">
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Add Section</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+
                 </div>
+            </div>    
+        </div>
+    </section>
 
+    <section id="allpost" class="allpost container-sm">
 
-
-            </div>
-
-            <div class="row mt-5">
-    <div class="col-md-10 mx-auto">
-        <h4 class="mb-3 text-white text-center">All Posts</h4>
-        <table class="table table-striped table-bordered bg-white">
-            <thead class="table-primary">
-                <tr>
-                    <th>Section</th>
-                    <th>Content Name</th>
-                    <th>Description</th>
-                    <th>URL</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for post in posts %}
-                <tr>
-                    <td>{{ post.section.name }}</td>
-                    <td>{{ post.content_name }}</td>
-                    <td>{{ post.description|linebreaksbr }}</td>
-                    <td><a href="{{ post.url }}" target="_blank">Open</a></td>
-                    <td>
-                        <a href="{% url 'edit_post' post.id %}" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="{% url 'delete_post' post.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this post?')">Delete</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="5" class="text-center">No posts available.</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-
-    <div class="container mt-5">
-    <h4 class="text-center text-dark mb-4">Manage Sections</h4>
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <table class="table table-bordered table-hover bg-white rounded shadow-sm">
-                <thead class="table-light">
+        <div class="row mt-5">
+        <div class="col-md-10 mx-auto">
+            <h4 class="mb-3 text-white text-center">All Posts</h4>
+            <table class="table table-striped table-bordered bg-white">
+                <thead class="table-primary">
                     <tr>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th style="width: 200px;">Actions</th>
+                        <th>Section</th>
+                        <th>Content Name</th>
+                        <th>Description</th>
+                        <th>URL</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for sec in sections %}
+                    {% for post in posts %}
                     <tr>
-                        <td><img src="{{ sec.image.url }}" alt="{{ sec.name }}" width="80" class="rounded"></td>
-                        <td>{{ sec.name }}</td>
+                        <td>{{ post.section.name }}</td>
+                        <td>{{ post.content_name }}</td>
+                        <td>{{ post.description|linebreaksbr }}</td>
+                        <td><a href="{{ post.url }}" target="_blank">Open</a></td>
                         <td>
-                            <a href="{% url 'edit_section' sec.id %}" class="btn btn-warning btn-sm">Edit</a>
-                            <a href="{% url 'delete_section' sec.id %}" 
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('Are you sure you want to delete this section and its posts?')">
-                               Delete
-                            </a>
+                            <a href="{% url 'edit_post' post.id %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'delete_post' post.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this post?')">Delete</a>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="3" class="text-center">No sections available</td></tr>
+                    <tr><td colspan="5" class="text-center">No posts available.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
-<br>
-<br>
-    <h4 class="text-center text-dark mb-4">ADD Jobopenings and Repo Links</h4>
 
-<div class="col-md-6">
-                <div class="card p-4 bg-white">
-                    <h4 class="mb-3 text-primary text-center">Add jonopenings</h4>
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="job_opening">
 
-                        <div class="mb-3">
-                            <label class="form-label">Select Section</label>
-                            <select name="section" class="form-select" required>
-                                {% for sec in sections %}
-                                    <option value="{{ sec.id }}">{{ sec.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" name="content_name" class="form-control" placeholder="Content Name" required>
-                        </div>
-                        <div class="mb-3">
-                            <textarea name="description" class="form-control" placeholder="Description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <input type="url" name="url" class="form-control" placeholder="job openings  URL" required>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success">Add Job openings</button>
-                        </div>
-                    </form>
-                </div>
+        <div class="container mt-5">
+        <h4 class="text-center text-dark mb-4">Manage Sections</h4>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <table class="table table-bordered table-hover bg-white rounded shadow-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th style="width: 200px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sec in sections %}
+                        <tr>
+                            <td><img src="{{ sec.image.url }}" alt="{{ sec.name }}" width="80" class="rounded"></td>
+                            <td>{{ sec.name }}</td>
+                            <td>
+                                <a href="{% url 'edit_section' sec.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'delete_section' sec.id %}" 
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this section and its posts?')">
+                                Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center">No sections available</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-
-
-            <!-- repo link -->
-             <div class="card p-4 bg-white" style="width: 600px;">
-                    <h4 class="mb-3 text-primary text-center">Add Repolinks</h4>
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="repo_link">
-
-                        <div class="mb-3">
-                            <label class="form-label">Select Section</label>
-                            <select name="section" class="form-select" required>
-                                {% for sec in sections %}
-                                    <option value="{{ sec.id }}">{{ sec.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" name="repo_name" class="form-control" placeholder="Content Name" required>
-                        </div>
-                        <div class="mb-3">
-                            <textarea name="description" class="form-control" placeholder="Description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <input type="url" name="repo_url" class="form-control" placeholder="Repo link  URL" required>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success">Add Repo links</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-
-
-            <!-- Job Openings Table -->
-             <div class="col-md-10 mx-auto mt-5">
-    <h4 class="mb-3 text-white text-center">All Repositories</h4>
-    <table class="table table-striped table-bordered bg-white">
-        <thead class="table-primary">
-            <tr>
-                <th>Section</th>
-                <th>Repository Name</th>
-                <th>Description</th>
-                <th>GitHub URL</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for repo in repositories %}
-            <tr>
-                <td>{{ repo.section.name }}</td>
-                <td>{{ repo.repo_name }}</td>
-                <td>{{ repo.description|linebreaksbr }}</td>
-                <td><a href="{{ repo.repo_url }}" target="_blank">View Repo</a></td>
-                <td>
-                    <a href="{% url 'edit_repo' repo.id %}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="{% url 'delete_repo' repo.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this repository?')">Delete</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="5" class="text-center">No repositories available.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<!-- job opening table -->
-<div class="col-md-10 mx-auto mt-5">
-    <h4 class="mb-3 text-white text-center">All Job Openings</h4>
-    <table class="table table-striped table-bordered bg-white">
-        <thead class="table-primary">
-            <tr>
-                <th>Section</th>
-                <th>Job Title</th>
-                <th>Description</th>
-                <th>Apply Link</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for job in job_openings %}
-            <tr>
-                <td>{{ job.section.name }}</td>
-                <td>{{ job.content_name }}</td>
-                <td>{{ job.description|linebreaksbr }}</td>
-                <td><a href="{{ job.url }}" target="_blank">Apply</a></td>
-                <td>
-                    <a href="{% url 'edit_job' job.id %}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="{% url 'delete_job' job.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this job opening?')">Delete</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="5" class="text-center">No job openings available.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
         </div>
+    </section>
+<br>
+<br>
+    <section id="addjob" class="addjob" style="display: flex; flex-direction: column; align-items: center; row-gap: 20px;">
+
+    <h4 class="text-center text-dark mb-4">ADD Job Openings and Repo Links</h4>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+
+        <!-- Job openings form -->
+        <div class="card p-4 bg-white" style="width: 600px;">
+            <h4 class="mb-3 text-primary text-center">Add Job Openings</h4>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="job_opening">
+                <div class="mb-3">
+                    <label class="form-label">Select Section</label>
+                    <select name="section" class="form-select" required>
+                        {% for sec in sections %}
+                            <option value="{{ sec.id }}">{{ sec.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="content_name" class="form-control" placeholder="Content Name" required>
+                </div>
+                <div class="mb-3">
+                    <textarea name="description" class="form-control" placeholder="Description" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <input type="url" name="url" class="form-control" placeholder="Job Openings URL" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">Add Job Openings</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Repo links form -->
+        <div class="card p-4 bg-white" style="width: 600px;">
+            <h4 class="mb-3 text-primary text-center">Add Repo Links</h4>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="repo_link">
+                <div class="mb-3">
+                    <label class="form-label">Select Section</label>
+                    <select name="section" class="form-select" required>
+                        {% for sec in sections %}
+                            <option value="{{ sec.id }}">{{ sec.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="repo_name" class="form-control" placeholder="Content Name" required>
+                </div>
+                <div class="mb-3">
+                    <textarea name="description" class="form-control" placeholder="Description" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <input type="url" name="repo_url" class="form-control" placeholder="Repo Link URL" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">Add Repo Links</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</section>
+
+    <!-- repo link -->
+    <section id="allrepo" class="allrepo container-sm"> 
+
+        <div class="col-md-10 mx-auto mt-5">
+            <h4 class="mb-3 text-white text-center">All Repositories</h4>
+            <table class="table table-striped table-bordered bg-white">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Section</th>
+                        <th>Repository Name</th>
+                        <th>Description</th>
+                        <th>GitHub URL</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for repo in repositories %}
+                    <tr>
+                        <td>{{ repo.section.name }}</td>
+                        <td>{{ repo.repo_name }}</td>
+                        <td>{{ repo.description|linebreaksbr }}</td>
+                        <td><a href="{{ repo.repo_url }}" target="_blank">View Repo</a></td>
+                        <td>
+                            <a href="{% url 'edit_repo' repo.id %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'delete_repo' repo.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this repository?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center">No repositories available.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+<!-- job opening table -->
+        <div class="col-md-10 mx-auto mt-5">
+            <h4 class="mb-3 text-white text-center">All Job Openings</h4>
+            <table class="table table-striped table-bordered bg-white">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Section</th>
+                        <th>Job Title</th>
+                        <th>Description</th>
+                        <th>Apply Link</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in job_openings %}
+                    <tr>
+                        <td>{{ job.section.name }}</td>
+                        <td>{{ job.content_name }}</td>
+                        <td>{{ job.description|linebreaksbr }}</td>
+                        <td><a href="{{ job.url }}" target="_blank">Apply</a></td>
+                        <td>
+                            <a href="{% url 'edit_job' job.id %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'delete_job' job.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this job opening?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center">No job openings available.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+    </section>
+
+    <!-- newsectio for img view -->
+
+     <section id="feedback" class="feedback container-sm">
+        <div class="container my-5">
+        <h3 class="text-center text-primary mb-4">📋 User Feedback</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped bg-white">
+            <thead class="table-primary">
+                <tr>
+                <th>User</th>
+                <th>Feedback Type</th>
+                <th>Rating</th>
+                <th>Message</th>
+                <th>Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in feedbacks %}
+                <tr>
+                <td>{{ feedback.user.username }}</td>
+                <td>{{ feedback.feedback_type }}</td>
+                <td>{{ feedback.rating|default:"-" }}</td>
+                <td>{{ feedback.message }}</td>
+                <td>
+                            
+                    <a href="{% url 'delete_feedback' feedback.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this feedback?')">Delete</a>
+                </td>
+                </tr>
+                {% empty %}
+                <tr>
+                <td colspan="4" class="text-center text-muted">No feedback submitted yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </section>
+    <!-- end -->
+
+
+
 
         <!-- Messages -->
         {% if messages %}
@@ -350,7 +526,24 @@
         {% endif %}
     </div>
 
+</main>
 
-    
+    <script>
+    function showSection(sectionId) {
+        const sections = ['add_new', 'allpost', 'addjob', 'allrepo','feedback'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.display = (id === sectionId) ? 'block' : 'none';
+            }
+        });
+    }
+
+    // Show default section
+    document.addEventListener("DOMContentLoaded", function() {
+        showSection('add_new');
+    });
+</script>
 </body>
+
 </html>

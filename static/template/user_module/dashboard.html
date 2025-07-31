@@ -124,6 +124,7 @@
     <li onclick="showSection('jobsSection')">Job Openings</li>
     <li onclick="showSection('repoSection')">Repositories</li>
     <li onclick="showSection('communitySection')">Community</li>
+    <li onclick="showSection('feedbacksection')">Feedback</li>
   </ul>
 </aside>
 
@@ -281,6 +282,57 @@
   </div>
 </section>
 
+<section  id="feedbacksection" class="container-sm content-section">
+  <div class="card bg-light p-4 my-4">
+  <h4 class="mb-3 text-center">Feedback Form</h4>
+  <form method="POST" action="{% url 'submit_feedback' %}">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+      <label for="feedback_type" class="form-label">Feedback Type</label>
+      <select class="form-select" id="feedback_type" name="feedback_type" required>
+        <option value="">Select</option>
+        <option value="Bug Report">Bug Report</option>
+        <option value="Feature Request">Feature Request</option>
+        <option value="General Feedback">General Feedback</option>
+        <option value="Help Needed">Help Needed</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="message" class="form-label">Message</label>
+      <textarea class="form-control" id="message" name="message" rows="4" placeholder="Describe your feedback..." required></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="rating" class="form-label">Rating</label>
+      <select class="form-select" id="rating" name="rating" style="width: 300px;">
+        <option value="">Optional</option>
+        <option value="1">★☆☆☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="3">★★★☆☆</option>
+        <option value="4">★★★★☆</option>
+        <option value="5">★★★★★</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Submit Feedback</button>
+  </form>
+</div>
+
+</section>
+
+{% if messages %}
+            <div class="row mt-4 justify-content-center">
+                <div class="col-md-8">
+                    {% for message in messages %}
+                        <div class="alert alert-info text-center" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+{% endif %}
 
 
 <!-- Footer -->
